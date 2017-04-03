@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="br" ng-app="mapApp">
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
+		<script src="scripts/app.js"></script>
+		<!-- <link rel="stylesheet" href="css/leaflet.css" /> -->
+		<link rel="stylesheet" href="css/map.css" />
+		<!-- <script src="scripts/leaflet.js"></script> -->
+
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	 	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	 	
+		
+	</head>
+	<body ng-controller="mapController">
+		<div id="mapid"></div>
+		<script src="scripts/controllers/map.js"></script>
+
+		<button ng-click="generateTemperaturesQ()">Temperatura</button>
+		<button ng-click="cleanMap()">Limpar</button>
+	</body>
+</html>

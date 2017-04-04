@@ -101,7 +101,7 @@ mapApp.controller('mapController', function ($scope){
 		}
 		var auxColor;
 		console.log(markerLat.length)
-		for (var i = 30000; i < markerLat.length-40000; i++) {
+		for (var i = 30002; i < markerLat.length-40002; i++) {
 			var auxName = (temperature[i]*i).toString();
 			if(temperature[i] > 35)
 				auxColor = '#DB0000';

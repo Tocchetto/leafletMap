@@ -4,13 +4,43 @@ mapApp.controller('mapController', function ($scope){
 
 	var mymap = L.map('mapid').setView([-12.85, -50.09], 4);
 
-	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 		maxZoom: 18,
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		id: 'mapbox.light'
-	}).addTo(mymap)
+    }).addTo(mymap);
+ 
+    // FeatureGroup is to store editable layers
+    var drawnItems = new L.FeatureGroup();
+    mymap.addLayer(drawnItems);
+ 
+    var drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems,
+            poly: {
+                allowIntersection: false
+            }
+        },
+        draw: {
+            polygon: {
+                allowIntersection: false,
+                showArea: true
+            },
+            polyline: false,
+            circle: false,
+            marker: true,
+            rectangle: false
+        }
+    });
+    mymap.addControl(drawControl);
+
+    mymap.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer;
+
+        drawnItems.addLayer(layer);
+    });
 
 	var legend = L.control({position: 'bottomright', title: 'teste'});
 
@@ -33,33 +63,33 @@ mapApp.controller('mapController', function ($scope){
 	legend.addTo(mymap);
 
 	function getColor(d) {
-	    return d > 35  ? '#DB0000' :
-	           d > 30   ? '#DB3E00' :
-	           d >25    ? '#DB6300' :
-	           d >20    ? '#DB9600' :
-	           d >15    ? '#DBBE00' :
-	           d >10    ? '#C9DB00' :
-	           d >5    ? '#92DB00' :
-	           d >0    ? '#00DB00' :
-	           d >-5    ? '#00DB6A' :
-	           d >-10    ? '#00DB9A' :
-	           d >-15    ? '#00D0DB' :
-	           d >-20    ? '#0096BF' :
-	           d >-25    ? '#002DBF' :
-	           d >-30    ? '#001763' :
-	           d <-30    ? '#00124F' :
-	                      '#00124F';
+	    return d >  35    ? '#DB0000' :
+	           d >  30    ? '#DB3E00' :
+	           d >  25    ? '#DB6300' :
+	           d >  20    ? '#DB9600' :
+	           d >  15    ? '#DBBE00' :
+	           d >  10    ? '#C9DB00' :
+	           d >   5    ? '#92DB00' :
+	           d >   0    ? '#00DB00' :
+	           d >  -5    ? '#00DB6A' :
+	           d > -10    ? '#00DB9A' :
+	           d > -15    ? '#00D0DB' :
+	           d > -20    ? '#0096BF' :
+	           d > -25    ? '#002DBF' :
+	           d > -30    ? '#001763' :
+	           d < -30    ? '#00124F' :
+	                        '#00124F';
 	}
 	var auxI = 0.3
 
 	var popup = L.popup();
 
-	function onMapClick(e) {
-	    popup
-	        .setLatLng(e.latlng)
-	        .setContent("You clicked the map at " + e.latlng.toString())
-	        .openOn(mymap);
-	}
+	// function onMapClick(e) {
+	//     popup
+	//         .setLatLng(e.latlng)
+	//         .setContent("You clicked the map at " + e.latlng.toString())
+	//         .openOn(mymap);
+	// }
 
 	mymap.on('click', onMapClick);
 
@@ -70,10 +100,8 @@ mapApp.controller('mapController', function ($scope){
 			$scope.cleanMap();
 		}
 		var auxColor;
-		for (var i = 0; i < markerLat.length; i++) {
+		for (var i = 0; i < markerLat.length-70000; i++) {
 			var auxName = (temperature[i]*i).toString();
-			//console.log("temperature[i]",(temperature[i]*i).toString())
-			//console.log("auxName",auxName)
 			if(temperature[i] > 35)
 				auxColor = '#DB0000';
 			else 
@@ -126,102 +154,12 @@ mapApp.controller('mapController', function ($scope){
 			]).addTo(mymap);
 			polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
 
-			// auxName = L.circle([markerLat[i], markerLng[i]], {
-			//     color: 'transparent',
-			//     fillColor: auxColor,
-			//     fillOpacity: 0.5,
-			//     radius: 50000
-			// }).addTo(mymap);
 			if(i<10)
-				console.log('auxName',auxName + mymap._layers)
+				//console.log('auxName',auxName + mymap._layers)
 			temperaturesNames[i] = polygons;
-			//console.log("temperaturesNames[i]",temperaturesNames[i]);
 			
 		}
 	}
-
-	// for (var i = 0; i < markerLat.length; i++) {
-	// 		var auxName = (temperature[i]*i).toString();
-	// 		//console.log("temperature[i]",(temperature[i]*i).toString())
-	// 		//console.log("auxName",auxName)
-	// 		if(temperature[i] > 35)
-	// 			auxColor = '#800026';
-	// 		else 
-	// 		if(temperature[i] <= 35 && temperature[i]>30)
-	// 			auxColor = '#bd0026';
-	// 		else
-	// 		if(temperature[i] <=30 && temperature[i]>25)
-	// 			auxColor = '#e31a1c';
-	// 		else
-	// 		if(temperature[i] <=25 && temperature[i]>20)
-	// 			auxColor = '#fc4e2a';
-	// 		else
-	// 		if(temperature[i] <=20 && temperature[i]>15)
-	// 			auxColor = '#fd8d3c';
-	// 		else
-	// 		if(temperature[i] <=15 && temperature[i]>10)
-	// 			auxColor = '#feb24c';
-	// 		else
-	// 		if(temperature[i] <=10 && temperature[i]>5)
-	// 			auxColor = '#fed976';
-	// 		else
-	// 		if(temperature[i] <=5 && temperature[i]>0)
-	// 			auxColor = '#ffeda0';
-	// 		else
-	// 		if(temperature[i] <=0 && temperature[i]>-5)
-	// 			auxColor = '#ffffcc';
-	// 		else
-	// 		if(temperature[i] <= -5&& temperature[i]>-10)
-	// 			auxColor = '#edf8b1';
-	// 		else
-	// 		if(temperature[i] <=-10 && temperature[i]>-15)
-	// 			auxColor = '#c7e9b4';
-	// 		else
-	// 		if(temperature[i] <=-15 && temperature[i]>-20)
-	// 			auxColor = '#7fcdbb';
-	// 		else
-	// 		if(temperature[i] <=-20 && temperature[i]>-25)
-	// 			auxColor = '#41b6c4';
-	// 		else
-	// 		if(temperature[i] <=-25 && temperature[i]>-30)
-	// 			auxColor = '#1d91c0';
-	// 		else
-	// 			auxColor = '#225ea8';
-
-	// 		var polygons = L.polygon([
-	// 		    [markerLat[i]+variation, markerLng[i]+variation],
-	// 		    [markerLat[i]+variation, markerLng[i]-variation],
-	// 		    [markerLat[i]-variation, markerLng[i]-variation],
-	// 		    [markerLat[i]-variation, markerLng[i]+variation]
-	// 		]).addTo(mymap);
-	// 		polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
-
-	// 		// auxName = L.circle([markerLat[i], markerLng[i]], {
-	// 		//     color: 'transparent',
-	// 		//     fillColor: auxColor,
-	// 		//     fillOpacity: 0.5,
-	// 		//     radius: 50000
-	// 		// }).addTo(mymap);
-	// 		if(i<10)
-	// 			console.log('auxName',auxName + mymap._layers)
-	// 		temperaturesNames[i] = polygons;
-	// 		//console.log("temperaturesNames[i]",temperaturesNames[i]);
-			
-	// 	}
-
-	// $scope.cleanMap2 = function () 
-	// {
-	// 	console.log("cleanMap")
-	// 	console.log(temperaturesNames.length)
-	// 	if(temperaturesNames.length>0)
-	// 	{
-	// 		for (var i = 0; i < 10; i++) {
-	// 			console.log("temperaturesNames[i]",temperaturesNames[i]);
-	// 			mymap.removeLayer(temperaturesNames[i]);
-	// 		}
-	// 	}
-
-	// }
 
 	$scope.cleanMap = function () {
 	    for(i in mymap._layers) {
@@ -236,7 +174,7 @@ mapApp.controller('mapController', function ($scope){
 	    }
 	}
 
-	//Simulação dados do banco
+//Simulação dados do banco
 
 	var markerLat = [-35.05
 , -35.05

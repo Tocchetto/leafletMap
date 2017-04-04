@@ -91,7 +91,7 @@ mapApp.controller('mapController', function ($scope){
 	//         .openOn(mymap);
 	// }
 
-	mymap.on('click', onMapClick);
+	//mymap.on('click', onMapClick);
 
 	var temperaturesNames = [];
 	$scope.generateTemperaturesQ = function(aux){
@@ -100,7 +100,8 @@ mapApp.controller('mapController', function ($scope){
 			$scope.cleanMap();
 		}
 		var auxColor;
-		for (var i = 0; i < markerLat.length-70000; i++) {
+		console.log(markerLat.length)
+		for (var i = 30000; i < markerLat.length-40000; i++) {
 			var auxName = (temperature[i]*i).toString();
 			if(temperature[i] > 35)
 				auxColor = '#DB0000';

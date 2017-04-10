@@ -188,14 +188,15 @@ mapApp.controller('mapController', function ($scope){
 
 	temperaturesNames = [];
 	$scope.generateTemperaturesRS = function(aux){
-		$scope.generateRS()
+		
 		var variation = 0.075;
 		if (aux != 1) {
-			//$scope.cleanMap();
+			$scope.cleanMap();
 		}
+		$scope.generateRS()
 
 		var auxColor;
-		for (var i = 2619; i < markerLat.length-60000; i++) {
+		for (var i = 0; i < markerLat.length; i++) { //i 2619, markerLat.length-60000
 			if(markerLat[i] <= -27.163029785507703 && markerLat[i] >= -33.75174787568194 && markerLng[i] >= -57.62466430664063 && markerLng[i] <= -49.581298828125)
 			{
 				var auxName = (temperature[i]*i).toString();
@@ -258,15 +259,87 @@ mapApp.controller('mapController', function ($scope){
 
 	temperaturesNames = [];
 	$scope.generateTemperaturesPF = function(aux){
-		$scope.generatePF()
+		
 		var variation = 0.075;
 		if (aux != 1) {
-			//$scope.cleanMap();
+			$scope.cleanMap();
 		}
+		$scope.generatePF()
 
 		var auxColor;
-		for (var i = 2619; i < markerLat.length-60000; i++) {
+		for (var i = 0; i < markerLat.length; i++) {
 			if(markerLat[i] <= -28.19641365952182 && markerLat[i] >= -28.311635046750602 && markerLng[i] >= -52.48443603515626 && markerLng[i] <= -52.32032775878907)
+			{
+				var auxName = (temperature[i]*i).toString();
+				if(temperature[i] > 35)
+					auxColor = '#DB0000';
+				else 
+				if(temperature[i] <= 35 && temperature[i]>30)
+					auxColor = '#DB3E00';
+				else
+				if(temperature[i] <=30 && temperature[i]>25)
+					auxColor = '#DB6300';
+				else
+				if(temperature[i] <=25 && temperature[i]>20)
+					auxColor = '#DB9600';
+				else
+				if(temperature[i] <=20 && temperature[i]>15)
+					auxColor = '#DBBE00';
+				else
+				if(temperature[i] <=15 && temperature[i]>10)
+					auxColor = '#C9DB00';
+				else
+				if(temperature[i] <=10 && temperature[i]>5)
+					auxColor = '#92DB00';
+				else
+				if(temperature[i] <=5 && temperature[i]>0)
+					auxColor = '#00DB00';
+				else
+				if(temperature[i] <=0 && temperature[i]>-5)
+					auxColor = '#00DB6A';
+				else
+				if(temperature[i] <= -5&& temperature[i]>-10)
+					auxColor = '#00DB9A';
+				else
+				if(temperature[i] <=-10 && temperature[i]>-15)
+					auxColor = '#00D0DB';
+				else
+				if(temperature[i] <=-15 && temperature[i]>-20)
+					auxColor = '#0096BF';
+				else
+				if(temperature[i] <=-20 && temperature[i]>-25)
+					auxColor = '#0059BF';
+				else
+				if(temperature[i] <=-25 && temperature[i]>-30)
+					auxColor = '#002DBF';
+				else
+					auxColor = '#001763';
+
+				var polygons = L.polygon([
+				    [markerLat[i]+variation, markerLng[i]+variation],
+				    [markerLat[i]+variation, markerLng[i]-variation],
+				    [markerLat[i]-variation, markerLng[i]-variation],
+				    [markerLat[i]-variation, markerLng[i]+variation]
+				]).addTo(mymap);
+				polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
+
+				temperaturesNames[i] = polygons;	
+			}
+		}
+	}
+
+	temperaturesNames = [];
+	$scope.generateTemperaturesBR = function(aux){
+		
+		var variation = 0.075;
+		if (aux != 1) {
+			$scope.cleanMap();
+		}
+		$scope.generateBR()
+
+		var auxColor;
+		for (var i = 0; i < markerLat.length; i++) {
+			if(markerLat[i] <= 5.353521355337334 && markerLat[i] >= -33.83391995365471 && markerLng[i] >= -74.04785156250001 && markerLng[i] <= -34.76074218750001)
 			{
 				var auxName = (temperature[i]*i).toString();
 				if(temperature[i] > 35)
@@ -347,6 +420,11 @@ mapApp.controller('mapController', function ($scope){
 	$scope.generatePF = function(){
 		mymap.setView([-28.261146513448647, -52.39551544189454], 12);
 		PF.addTo(mymap);
+	}
+
+	$scope.generateBR = function(){
+		mymap.setView([-12.85, -50.09], 4);
+		BR.addTo(mymap);
 	}
 
 });

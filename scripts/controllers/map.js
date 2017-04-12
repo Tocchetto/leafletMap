@@ -1,6 +1,6 @@
 //https://openweathermap.org/docs/hugemaps
 
-mapApp.controller('mapController', function ($scope){
+mapApp.controller('mapController', function ($scope, $timeout){
 
 	var mymap = L.map('mapid').setView([-12.85, -50.09], 4);
 
@@ -119,16 +119,106 @@ mapApp.controller('mapController', function ($scope){
 
 	//mymap.on('click', onMapClick);
 
-	var temperaturesNames = [];
-	$scope.generateTemperaturesSouthAmerica = function(aux){
+	//var temperaturesNames = [];
+	var maxLength = 75300;
+	var lengthVariation = 100;
+	var i = 2619;
+	$scope.generateTemperaturesSouthAmerica = async function(i,aux){
 		var variation = 0.075;
 		if (aux != 1) {
 			$scope.cleanMap();
 		}
 
 		var auxColor;
-		for (var i = 2619; i < markerLat.length-70000; i++) {
-			var auxName = (temperature[i]*i).toString();
+		//console.log(i," i")
+		//console.log(markerLat.length, " markerLat.length")
+		//console.log(markerLat.length-maxLength+lengthVariation + " markerLat.length-maxLength-lengthVariation")
+		for (i; i < markerLat.length-maxLength+lengthVariation; i++) {
+			//var auxName = (temperature[i]*i).toString();
+			if(temperature[i] > 35)
+				auxColor = '#DB0000';
+			else 
+			if(temperature[i] <= 35 && temperature[i]>30)
+				auxColor = '#DB3E00';
+			else
+			if(temperature[i] <=30 && temperature[i]>25)
+				auxColor = '#DB6300';
+			else
+			if(temperature[i] <=25 && temperature[i]>20)
+				auxColor = '#DB9600';
+			else
+			if(temperature[i] <=20 && temperature[i]>15)
+				auxColor = '#DBBE00';
+			else
+			if(temperature[i] <=15 && temperature[i]>10)
+				auxColor = '#C9DB00';
+			else
+			if(temperature[i] <=10 && temperature[i]>5)
+				auxColor = '#92DB00';
+			else
+			if(temperature[i] <=5 && temperature[i]>0)
+				auxColor = '#00DB00';
+			else
+			if(temperature[i] <=0 && temperature[i]>-5)
+				auxColor = '#00DB6A';
+			else
+			if(temperature[i] <= -5&& temperature[i]>-10)
+				auxColor = '#00DB9A';
+			else
+			if(temperature[i] <=-10 && temperature[i]>-15)
+				auxColor = '#00D0DB';
+			else
+			if(temperature[i] <=-15 && temperature[i]>-20)
+				auxColor = '#0096BF';
+			else
+			if(temperature[i] <=-20 && temperature[i]>-25)
+				auxColor = '#0059BF';
+			else
+			if(temperature[i] <=-25 && temperature[i]>-30)
+				auxColor = '#002DBF';
+			else
+				auxColor = '#001763';
+			//console.log(markerLat.length-maxLength-lengthVariation + " markerLat.length-maxLength-lengthVariation")
+			if(i >= markerLat.length-maxLength+lengthVariation-1){
+				//console.log(i + "i")
+				//console.log(markerLat.length-maxLength-lengthVariation + " markerLat.length-maxLength-lengthVariation")
+				var polygons = L.polygon([
+				    [markerLat[i]+variation, markerLng[i]+variation],
+				    [markerLat[i]+variation, markerLng[i]-variation],
+				    [markerLat[i]-variation, markerLng[i]-variation],
+				    [markerLat[i]-variation, markerLng[i]+variation]
+				]).addTo(mymap);
+				polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
+				if(lengthVariation == 70000)
+					break;
+				lengthVariation = lengthVariation + 100
+				await sleep(20);
+				$scope.generateTemperaturesSouthAmerica(i, 1);
+				break;
+			}
+
+			var polygons = L.polygon([
+			    [markerLat[i]+variation, markerLng[i]+variation],
+			    [markerLat[i]+variation, markerLng[i]-variation],
+			    [markerLat[i]-variation, markerLng[i]-variation],
+			    [markerLat[i]-variation, markerLng[i]+variation]
+			]).addTo(mymap);
+			polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
+
+			//temperaturesNames[i] = polygons;
+			
+		}
+
+	}	
+
+	async function generateTemperaturesSouthAmerica2(i){
+		console.log("aaa")
+		var variation = 0.075;
+
+		var auxColor;
+		console.log(markerLat.length)
+		for (i; i < markerLat.length-68000; i++) {
+			//var auxName = (temperature[i]*i).toString();
 			if(temperature[i] > 35)
 				auxColor = '#DB0000';
 			else 
@@ -181,12 +271,12 @@ mapApp.controller('mapController', function ($scope){
 			]).addTo(mymap);
 			polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
 
-			temperaturesNames[i] = polygons;
+			//temperaturesNames[i] = polygons;
 			
 		}
-	}	
+	}
 
-	temperaturesNames = [];
+	//temperaturesNames = [];
 	$scope.generateTemperaturesRS = function(aux){
 		
 		var variation = 0.075;
@@ -199,7 +289,7 @@ mapApp.controller('mapController', function ($scope){
 		for (var i = 0; i < markerLat.length; i++) { //i 2619, markerLat.length-60000
 			if(markerLat[i] <= -27.163029785507703 && markerLat[i] >= -33.75174787568194 && markerLng[i] >= -57.62466430664063 && markerLng[i] <= -49.581298828125)
 			{
-				var auxName = (temperature[i]*i).toString();
+				//var auxName = (temperature[i]*i).toString();
 				if(temperature[i] > 35)
 					auxColor = '#DB0000';
 				else 
@@ -252,12 +342,12 @@ mapApp.controller('mapController', function ($scope){
 				]).addTo(mymap);
 				polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
 
-				temperaturesNames[i] = polygons;	
+				//temperaturesNames[i] = polygons;	
 			}
 		}
 	}
 
-	temperaturesNames = [];
+	//temperaturesNames = [];
 	$scope.generateTemperaturesPF = function(aux){
 		
 		var variation = 0.075;
@@ -270,7 +360,7 @@ mapApp.controller('mapController', function ($scope){
 		for (var i = 0; i < markerLat.length; i++) {
 			if(markerLat[i] <= -28.19641365952182 && markerLat[i] >= -28.311635046750602 && markerLng[i] >= -52.48443603515626 && markerLng[i] <= -52.32032775878907)
 			{
-				var auxName = (temperature[i]*i).toString();
+				//var auxName = (temperature[i]*i).toString();
 				if(temperature[i] > 35)
 					auxColor = '#DB0000';
 				else 
@@ -323,12 +413,12 @@ mapApp.controller('mapController', function ($scope){
 				]).addTo(mymap);
 				polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
 
-				temperaturesNames[i] = polygons;	
+				//temperaturesNames[i] = polygons;	
 			}
 		}
 	}
 
-	temperaturesNames = [];
+	//temperaturesNames = [];
 	$scope.generateTemperaturesBR = function(aux){
 		
 		var variation = 0.075;
@@ -339,9 +429,9 @@ mapApp.controller('mapController', function ($scope){
 
 		var auxColor;
 		for (var i = 0; i < markerLat.length; i++) {
-			if(markerLat[i] <= 5.353521355337334 && markerLat[i] >= -33.83391995365471 && markerLng[i] >= -74.04785156250001 && markerLng[i] <= -34.76074218750001)
+			if(markerLat[i] <= 5.353521355337334 && markerLat[i] >= -33.83391995365471 && markerLng[i] >= -48.04785156250001 && markerLng[i] <= -34.76074218750001)
 			{
-				var auxName = (temperature[i]*i).toString();
+				//var auxName = (temperature[i]*i).toString();
 				if(temperature[i] > 35)
 					auxColor = '#DB0000';
 				else 
@@ -394,7 +484,7 @@ mapApp.controller('mapController', function ($scope){
 				]).addTo(mymap);
 				polygons.setStyle({color: 'transparent', fillColor: auxColor, fillOpacity: 0.7,});
 
-				temperaturesNames[i] = polygons;	
+				//temperaturesNames[i] = polygons;	
 			}
 		}
 	}
@@ -425,6 +515,10 @@ mapApp.controller('mapController', function ($scope){
 	$scope.generateBR = function(){
 		mymap.setView([-12.85, -50.09], 4);
 		BR.addTo(mymap);
+	}
+
+	function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
 });

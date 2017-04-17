@@ -58,6 +58,10 @@
 		<script src="scripts/banco/cities/passoFundo.js"></script>
 		<script src="scripts/banco/states/rioGrandeDoSul.js"></script>
 		<script src="scripts/banco/countries/brazil.js"></script>
+
+		<!-- ShapeFile Includes -->
+		<script src="node_modules/leaflet-shapefile/leaflet.shpfile.js"></script>
+		<script src="node_modules/leaflet-shapefile/shp.js"></script>
 		
 
 		<script src="scripts/controllers/map.js"></script>
@@ -71,7 +75,7 @@
 			<div style="width: 5px;">
 			</div>
 			<div style="width: 200px; float:right;">
-				<button  ng-click="generateTemperaturesSouthAmerica(1,1)">Temperatura</button><br>
+				<button ng-click="generateTemperaturesSouthAmerica(1,1)">Temperatura</button><br>
 				<button ng-click="cleanMap()">Limpar</button><br>
 				<button ng-click="generateBR()"> BR </button><br>
 				<button ng-click="generateTemperaturesBR()"> BRT </button><br>
@@ -79,6 +83,7 @@
 				<button ng-click="generateTemperaturesRS()"> RST </button><br>
 				<button ng-click="generatePF()"> PF </button><br>
 				<button ng-click="generateTemperaturesPF()"> PFT </button><br>
+				<button ng-click="test()"> teste </button><br>
 			</div>
 		</div>
 	</body>

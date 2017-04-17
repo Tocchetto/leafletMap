@@ -12,6 +12,12 @@ mapApp.controller('mapController', function ($scope, $timeout){
 		id: 'mapbox.light'
     }).addTo(mymap);
  
+    $scope.test = function(){
+    	var shpfile = new L.Shapefile('congress.zip'); 
+    	shpfile.addTo(mymap);
+    }
+    
+
     // FeatureGroup is to store editable layers
     var drawnItems = new L.FeatureGroup();
     mymap.addLayer(drawnItems);
@@ -194,7 +200,7 @@ mapApp.controller('mapController', function ($scope, $timeout){
 				lengthVariation = lengthVariation + 100
 				await sleep(20);
 				$scope.generateTemperaturesSouthAmerica(i, 1);
-				break;
+				return;
 			}
 
 			var polygons = L.polygon([

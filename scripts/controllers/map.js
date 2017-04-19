@@ -41,7 +41,9 @@ mapApp.controller('mapController', function ($scope, $timeout){
             console.log(file)
             fr = new FileReader();
             fr.onload = receberBinario;
-            fr.readAsBinaryString(file);
+            fr.readAsArrayBuffer(file);
+            // readAsBinaryString(file);
+            
         }
         function receberBinario() {
             result = fr.result

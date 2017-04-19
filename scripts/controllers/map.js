@@ -12,11 +12,42 @@ mapApp.controller('mapController', function ($scope, $timeout){
 		id: 'mapbox.light'
     }).addTo(mymap);
  
-    $scope.test = function(){
-    	var shpfile = new L.Shapefile('congress.zip'); 
+    $scope.addShape = function(shape){
+    	console.log(shape)
+    	var shpfile = new L.Shapefile(shape);
     	shpfile.addTo(mymap);
+    	console.log("after add map");
+    	// var shpfile = new L.Shapefile('scripts/banco/ShapeFiles/Brasil.zip');
+    	// shpfile.addTo(mymap);
     }
+
+    $scope.uploadFile = function(){
+		var file = $scope.myFile;
+
+		console.log($scope.myFile +' file is ' );
+		console.dir(file);
+		var shpfile = new L.Shapefile(file); 
+    	shpfile.addTo(mymap);
+    };
     
+    $scope.loadFile = function() {
+
+        input = document.getElementById('fileinput');
+        if (!input.files[0]) {
+            bodyAppend("p", "Please select a file before clicking 'Load'");
+        }	
+        else {
+            file = input.files[0];
+            console.log(file)
+            fr = new FileReader();
+            fr.onload = receberBinario;
+            fr.readAsBinaryString(file);
+        }
+        function receberBinario() {
+            result = fr.result
+            $scope.addShape(result);			
+        }
+    }    
 
     // FeatureGroup is to store editable layers
     var drawnItems = new L.FeatureGroup();

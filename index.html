@@ -84,6 +84,11 @@
 				<button ng-click="generatePF()"> PF </button><br>
 				<button ng-click="generateTemperaturesPF()"> PFT </button><br>
 				<button ng-click="test()"> teste </button><br>
+				<form action='#' onsubmit="return false;">
+					<input type='file' id='fileinput'>
+					<input type='button' id='btnLoad' value='Load' ng-click='loadFile()'>
+				</form>
+				
 			</div>
 		</div>
 	</body>

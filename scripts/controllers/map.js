@@ -11,45 +11,6 @@ mapApp.controller('mapController', function ($scope, $timeout){
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		id: 'mapbox.light'
     }).addTo(mymap);
- 
-    $scope.addShape = function(shape){
-    	console.log(shape)
-    	var shpfile = new L.Shapefile(shape);
-    	shpfile.addTo(mymap);
-    	console.log("after add map");
-    	// var shpfile = new L.Shapefile('scripts/banco/ShapeFiles/Brasil.zip');
-    	// shpfile.addTo(mymap);
-    }
-
-    $scope.uploadFile = function(){
-		var file = $scope.myFile;
-
-		console.log($scope.myFile +' file is ' );
-		console.dir(file);
-		var shpfile = new L.Shapefile(file); 
-    	shpfile.addTo(mymap);
-    };
-    
-    $scope.loadFile = function() {
-
-        input = document.getElementById('fileinput');
-        if (!input.files[0]) {
-            bodyAppend("p", "Please select a file before clicking 'Load'");
-        }	
-        else {
-            file = input.files[0];
-            console.log(file)
-            fr = new FileReader();
-            fr.onload = receberBinario;
-            fr.readAsArrayBuffer(file);
-            // readAsBinaryString(file);
-            
-        }
-        function receberBinario() {
-            result = fr.result
-            $scope.addShape(result);			
-        }
-    }    
 
     // FeatureGroup is to store editable layers
     var drawnItems = new L.FeatureGroup();
@@ -128,6 +89,7 @@ mapApp.controller('mapController', function ($scope, $timeout){
 	legend.addTo(mymap);
 
 	function getColor(d) {
+		//http://www.weatherzone.com.au/help/legend.jsp
 	    return d >  35    ? '#DB0000' :
 	           d >  30    ? '#DB3E00' :
 	           d >  25    ? '#DB6300' :
@@ -158,7 +120,6 @@ mapApp.controller('mapController', function ($scope, $timeout){
 
 	//mymap.on('click', onMapClick);
 
-	//var temperaturesNames = [];
 	var maxLength = 75300;
 	var lengthVariation = 100;
 	var i = 2619;
@@ -169,58 +130,11 @@ mapApp.controller('mapController', function ($scope, $timeout){
 		}
 
 		var auxColor;
-		//console.log(i," i")
-		//console.log(markerLat.length, " markerLat.length")
-		//console.log(markerLat.length-maxLength+lengthVariation + " markerLat.length-maxLength-lengthVariation")
 		for (i; i < markerLat.length-maxLength+lengthVariation; i++) {
 			//var auxName = (temperature[i]*i).toString();
-			if(temperature[i] > 35)
-				auxColor = '#DB0000';
-			else 
-			if(temperature[i] <= 35 && temperature[i]>30)
-				auxColor = '#DB3E00';
-			else
-			if(temperature[i] <=30 && temperature[i]>25)
-				auxColor = '#DB6300';
-			else
-			if(temperature[i] <=25 && temperature[i]>20)
-				auxColor = '#DB9600';
-			else
-			if(temperature[i] <=20 && temperature[i]>15)
-				auxColor = '#DBBE00';
-			else
-			if(temperature[i] <=15 && temperature[i]>10)
-				auxColor = '#C9DB00';
-			else
-			if(temperature[i] <=10 && temperature[i]>5)
-				auxColor = '#92DB00';
-			else
-			if(temperature[i] <=5 && temperature[i]>0)
-				auxColor = '#00DB00';
-			else
-			if(temperature[i] <=0 && temperature[i]>-5)
-				auxColor = '#00DB6A';
-			else
-			if(temperature[i] <= -5&& temperature[i]>-10)
-				auxColor = '#00DB9A';
-			else
-			if(temperature[i] <=-10 && temperature[i]>-15)
-				auxColor = '#00D0DB';
-			else
-			if(temperature[i] <=-15 && temperature[i]>-20)
-				auxColor = '#0096BF';
-			else
-			if(temperature[i] <=-20 && temperature[i]>-25)
-				auxColor = '#0059BF';
-			else
-			if(temperature[i] <=-25 && temperature[i]>-30)
-				auxColor = '#002DBF';
-			else
-				auxColor = '#001763';
-			//console.log(markerLat.length-maxLength-lengthVariation + " markerLat.length-maxLength-lengthVariation")
+			auxColor = generateTemperatureColor(i);
+			
 			if(i >= markerLat.length-maxLength+lengthVariation-1){
-				//console.log(i + "i")
-				//console.log(markerLat.length-maxLength-lengthVariation + " markerLat.length-maxLength-lengthVariation")
 				var polygons = L.polygon([
 				    [markerLat[i]+variation, markerLng[i]+variation],
 				    [markerLat[i]+variation, markerLng[i]-variation],
@@ -258,49 +172,7 @@ mapApp.controller('mapController', function ($scope, $timeout){
 		console.log(markerLat.length)
 		for (i; i < markerLat.length-68000; i++) {
 			//var auxName = (temperature[i]*i).toString();
-			if(temperature[i] > 35)
-				auxColor = '#DB0000';
-			else 
-			if(temperature[i] <= 35 && temperature[i]>30)
-				auxColor = '#DB3E00';
-			else
-			if(temperature[i] <=30 && temperature[i]>25)
-				auxColor = '#DB6300';
-			else
-			if(temperature[i] <=25 && temperature[i]>20)
-				auxColor = '#DB9600';
-			else
-			if(temperature[i] <=20 && temperature[i]>15)
-				auxColor = '#DBBE00';
-			else
-			if(temperature[i] <=15 && temperature[i]>10)
-				auxColor = '#C9DB00';
-			else
-			if(temperature[i] <=10 && temperature[i]>5)
-				auxColor = '#92DB00';
-			else
-			if(temperature[i] <=5 && temperature[i]>0)
-				auxColor = '#00DB00';
-			else
-			if(temperature[i] <=0 && temperature[i]>-5)
-				auxColor = '#00DB6A';
-			else
-			if(temperature[i] <= -5&& temperature[i]>-10)
-				auxColor = '#00DB9A';
-			else
-			if(temperature[i] <=-10 && temperature[i]>-15)
-				auxColor = '#00D0DB';
-			else
-			if(temperature[i] <=-15 && temperature[i]>-20)
-				auxColor = '#0096BF';
-			else
-			if(temperature[i] <=-20 && temperature[i]>-25)
-				auxColor = '#0059BF';
-			else
-			if(temperature[i] <=-25 && temperature[i]>-30)
-				auxColor = '#002DBF';
-			else
-				auxColor = '#001763';
+			auxColor = generateTemperatureColor(i);
 
 			var polygons = L.polygon([
 			    [markerLat[i]+variation, markerLng[i]+variation],
@@ -329,49 +201,7 @@ mapApp.controller('mapController', function ($scope, $timeout){
 			if(markerLat[i] <= -27.163029785507703 && markerLat[i] >= -33.75174787568194 && markerLng[i] >= -57.62466430664063 && markerLng[i] <= -49.581298828125)
 			{
 				//var auxName = (temperature[i]*i).toString();
-				if(temperature[i] > 35)
-					auxColor = '#DB0000';
-				else 
-				if(temperature[i] <= 35 && temperature[i]>30)
-					auxColor = '#DB3E00';
-				else
-				if(temperature[i] <=30 && temperature[i]>25)
-					auxColor = '#DB6300';
-				else
-				if(temperature[i] <=25 && temperature[i]>20)
-					auxColor = '#DB9600';
-				else
-				if(temperature[i] <=20 && temperature[i]>15)
-					auxColor = '#DBBE00';
-				else
-				if(temperature[i] <=15 && temperature[i]>10)
-					auxColor = '#C9DB00';
-				else
-				if(temperature[i] <=10 && temperature[i]>5)
-					auxColor = '#92DB00';
-				else
-				if(temperature[i] <=5 && temperature[i]>0)
-					auxColor = '#00DB00';
-				else
-				if(temperature[i] <=0 && temperature[i]>-5)
-					auxColor = '#00DB6A';
-				else
-				if(temperature[i] <= -5&& temperature[i]>-10)
-					auxColor = '#00DB9A';
-				else
-				if(temperature[i] <=-10 && temperature[i]>-15)
-					auxColor = '#00D0DB';
-				else
-				if(temperature[i] <=-15 && temperature[i]>-20)
-					auxColor = '#0096BF';
-				else
-				if(temperature[i] <=-20 && temperature[i]>-25)
-					auxColor = '#0059BF';
-				else
-				if(temperature[i] <=-25 && temperature[i]>-30)
-					auxColor = '#002DBF';
-				else
-					auxColor = '#001763';
+				auxColor = generateTemperatureColor(i);
 
 				var polygons = L.polygon([
 				    [markerLat[i]+variation, markerLng[i]+variation],
@@ -400,49 +230,7 @@ mapApp.controller('mapController', function ($scope, $timeout){
 			if(markerLat[i] <= -28.19641365952182 && markerLat[i] >= -28.311635046750602 && markerLng[i] >= -52.48443603515626 && markerLng[i] <= -52.32032775878907)
 			{
 				//var auxName = (temperature[i]*i).toString();
-				if(temperature[i] > 35)
-					auxColor = '#DB0000';
-				else 
-				if(temperature[i] <= 35 && temperature[i]>30)
-					auxColor = '#DB3E00';
-				else
-				if(temperature[i] <=30 && temperature[i]>25)
-					auxColor = '#DB6300';
-				else
-				if(temperature[i] <=25 && temperature[i]>20)
-					auxColor = '#DB9600';
-				else
-				if(temperature[i] <=20 && temperature[i]>15)
-					auxColor = '#DBBE00';
-				else
-				if(temperature[i] <=15 && temperature[i]>10)
-					auxColor = '#C9DB00';
-				else
-				if(temperature[i] <=10 && temperature[i]>5)
-					auxColor = '#92DB00';
-				else
-				if(temperature[i] <=5 && temperature[i]>0)
-					auxColor = '#00DB00';
-				else
-				if(temperature[i] <=0 && temperature[i]>-5)
-					auxColor = '#00DB6A';
-				else
-				if(temperature[i] <= -5&& temperature[i]>-10)
-					auxColor = '#00DB9A';
-				else
-				if(temperature[i] <=-10 && temperature[i]>-15)
-					auxColor = '#00D0DB';
-				else
-				if(temperature[i] <=-15 && temperature[i]>-20)
-					auxColor = '#0096BF';
-				else
-				if(temperature[i] <=-20 && temperature[i]>-25)
-					auxColor = '#0059BF';
-				else
-				if(temperature[i] <=-25 && temperature[i]>-30)
-					auxColor = '#002DBF';
-				else
-					auxColor = '#001763';
+				auxColor = generateTemperatureColor(i);
 
 				var polygons = L.polygon([
 				    [markerLat[i]+variation, markerLng[i]+variation],
@@ -471,49 +259,7 @@ mapApp.controller('mapController', function ($scope, $timeout){
 			if(markerLat[i] <= 5.353521355337334 && markerLat[i] >= -33.83391995365471 && markerLng[i] >= -48.04785156250001 && markerLng[i] <= -34.76074218750001)
 			{
 				//var auxName = (temperature[i]*i).toString();
-				if(temperature[i] > 35)
-					auxColor = '#DB0000';
-				else 
-				if(temperature[i] <= 35 && temperature[i]>30)
-					auxColor = '#DB3E00';
-				else
-				if(temperature[i] <=30 && temperature[i]>25)
-					auxColor = '#DB6300';
-				else
-				if(temperature[i] <=25 && temperature[i]>20)
-					auxColor = '#DB9600';
-				else
-				if(temperature[i] <=20 && temperature[i]>15)
-					auxColor = '#DBBE00';
-				else
-				if(temperature[i] <=15 && temperature[i]>10)
-					auxColor = '#C9DB00';
-				else
-				if(temperature[i] <=10 && temperature[i]>5)
-					auxColor = '#92DB00';
-				else
-				if(temperature[i] <=5 && temperature[i]>0)
-					auxColor = '#00DB00';
-				else
-				if(temperature[i] <=0 && temperature[i]>-5)
-					auxColor = '#00DB6A';
-				else
-				if(temperature[i] <= -5&& temperature[i]>-10)
-					auxColor = '#00DB9A';
-				else
-				if(temperature[i] <=-10 && temperature[i]>-15)
-					auxColor = '#00D0DB';
-				else
-				if(temperature[i] <=-15 && temperature[i]>-20)
-					auxColor = '#0096BF';
-				else
-				if(temperature[i] <=-20 && temperature[i]>-25)
-					auxColor = '#0059BF';
-				else
-				if(temperature[i] <=-25 && temperature[i]>-30)
-					auxColor = '#002DBF';
-				else
-					auxColor = '#001763';
+				auxColor = generateTemperatureColor(i);
 
 				var polygons = L.polygon([
 				    [markerLat[i]+variation, markerLng[i]+variation],
@@ -555,6 +301,91 @@ mapApp.controller('mapController', function ($scope, $timeout){
 		mymap.setView([-12.85, -50.09], 4);
 		BR.addTo(mymap);
 	}
+
+	$scope.addShape = function(shape){
+    	console.log(shape)
+    	var shpfile = new L.Shapefile(shape);
+    	shpfile.addTo(mymap);
+    	console.log("after add map");
+    	// var shpfile = new L.Shapefile('scripts/banco/ShapeFiles/Brasil.zip');
+    	// shpfile.addTo(mymap);
+    }
+
+    $scope.uploadFile = function(){
+		var file = $scope.myFile;
+
+		console.log($scope.myFile +' file is ' );
+		console.dir(file);
+		var shpfile = new L.Shapefile(file); 
+    	shpfile.addTo(mymap);
+    };
+    
+    $scope.loadFile = function() {
+
+        input = document.getElementById('fileinput');
+        if (!input.files[0]) {
+            bodyAppend("p", "Please select a file before clicking 'Load'");
+        }
+        else {
+            file = input.files[0];
+            console.log(file)
+            fr = new FileReader();
+            fr.onload = receberBinario;
+            fr.readAsArrayBuffer(file);
+            // readAsBinaryString(file);
+            
+        }
+        function receberBinario() {
+            result = fr.result
+            $scope.addShape(result);			
+        }
+    }
+
+    function generateTemperatureColor(i){
+    	if(temperature[i] > 35)
+			return '#DB0000';
+		else 
+		if(temperature[i] <= 35 && temperature[i]>30)
+			return '#DB3E00';
+		else
+		if(temperature[i] <=30 && temperature[i]>25)
+			return '#DB6300';
+		else
+		if(temperature[i] <=25 && temperature[i]>20)
+			return '#DB9600';
+		else
+		if(temperature[i] <=20 && temperature[i]>15)
+			return '#DBBE00';
+		else
+		if(temperature[i] <=15 && temperature[i]>10)
+			return '#C9DB00';
+		else
+		if(temperature[i] <=10 && temperature[i]>5)
+			return '#92DB00';
+		else
+		if(temperature[i] <=5 && temperature[i]>0)
+			return '#00DB00';
+		else
+		if(temperature[i] <=0 && temperature[i]>-5)
+			return '#00DB6A';
+		else
+		if(temperature[i] <= -5&& temperature[i]>-10)
+			return '#00DB9A';
+		else
+		if(temperature[i] <=-10 && temperature[i]>-15)
+			return '#00D0DB';
+		else
+		if(temperature[i] <=-15 && temperature[i]>-20)
+			return '#0096BF';
+		else
+		if(temperature[i] <=-20 && temperature[i]>-25)
+			return '#0059BF';
+		else
+		if(temperature[i] <=-25 && temperature[i]>-30)
+			return '#002DBF';
+		else
+			return '#001763';
+    }
 
 	function sleep(ms) {
 	  return new Promise(resolve => setTimeout(resolve, ms));
